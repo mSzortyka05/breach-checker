@@ -22,6 +22,11 @@ KNOWN_HASHES = load_hashes()
 print(f"Wczytano {len(KNOWN_HASHES)} hashy z {HASHES_FILE}", flush=True)
 
 
+@app.get("/health")
+def health():
+    return jsonify({"status": "ok"})
+
+
 @app.post("/check")
 def check():
     data = request.get_json(silent=True) or {}
@@ -29,7 +34,6 @@ def check():
         return jsonify({"error": "brak pola 'hash'"}), 400
 
     h = str(data["hash"]).lower()
-
     if not re.fullmatch(r"[0-9a-f]{40}", h):
         return jsonify({"error": "nieprawidłowy format skrótu SHA-1"}), 400
 
